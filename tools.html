@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Free Financial Tools - The Smart Financial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--primary:#0050ff;--primary-dark:#0038cc;--primary-light:#e8f0ff;--dark:#121217;--dark-2:#1e1e2a;--text:#2d2d3e;--text-muted:#6c6c89;--border:#e4e4ef;--bg:#f7f7fb;--white:#fff;--green:#10b981;--green-light:#ecfdf5;--red:#ef4444;--red-light:#fef2f2;--orange:#f59e0b;--orange-light:#fffbeb;--radius:0.75rem;--radius-lg:1.25rem}
+    html{scroll-behavior:smooth}
+    body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    nav{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 2rem}
+    .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:68px}
+    .logo{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:var(--dark)}
+    .logo-icon{width:36px;height:36px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center}
+    .logo-text{font-weight:700;font-size:1.15rem;letter-spacing:-.02em}
+    .logo-text span{color:var(--primary)}
+    .nav-user .greeting{font-size:.875rem;color:var(--text-muted)}
+    .nav-user .greeting strong{color:var(--dark)}
+    .welcome-banner{background:linear-gradient(135deg,#121217 0%,#1e1e2a 50%,#0d1a3a 100%);color:var(--white);padding:2.5rem 2rem;position:relative;overflow:hidden}
+    .welcome-banner::before{content:"";position:absolute;top:-60%;right:-15%;width:500px;height:500px;background:radial-gradient(circle,rgba(0,80,255,.2) 0%,transparent 70%);pointer-events:none}
+    .welcome-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+    .welcome-inner h1{font-size:1.75rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.4rem}
+    .welcome-inner p{color:rgba(255,255,255,.6);font-size:.95rem}
+    .toc{background:var(--white);border-bottom:1px solid var(--border);padding:.75rem 2rem;position:sticky;top:68px;z-index:90;overflow-x:auto}
+    .toc-inner{max-width:1200px;margin:0 auto;display:flex;gap:.5rem;flex-wrap:nowrap}
+    .toc a{font-size:.78rem;font-weight:600;color:var(--text-muted);text-decoration:none;padding:.4rem .85rem;border-radius:999px;white-space:nowrap;transition:all .2s;border:1px solid transparent}
+    .toc a:hover,.toc a.active{background:var(--primary-light);color:var(--primary);border-color:rgba(0,80,255,.15)}
+    .tools-container{max-width:1200px;margin:0 auto;padding:2rem}
+    .tool-section{margin-bottom:3rem;scroll-margin-top:160px}
+    .tool-section h2{font-size:1.35rem;font-weight:800;color:var(--dark);letter-spacing:-.02em;margin-bottom:.25rem;display:flex;align-items:center;gap:.5rem}
+    .tool-section h2 .tool-num{background:var(--primary);color:var(--white);font-size:.7rem;width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700}
+    .tool-section>p{font-size:.875rem;color:var(--text-muted);margin-bottom:1.25rem;line-height:1.6}
+    .tool-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem;transition:box-shadow .2s}
+    .tool-card:hover{box-shadow:0 4px 24px rgba(0,80,255,.08)}
+    .tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+    .input-side,.result-side{display:flex;flex-direction:column;gap:1rem}
+    .result-side{background:var(--bg);border-radius:var(--radius);padding:1.25rem}
+    .fg{display:flex;flex-direction:column;gap:.3rem}
+    .fg label{font-size:.8rem;font-weight:600;color:var(--text)}
+    .fg input,.fg select{padding:.6rem .85rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:.875rem;font-family:"Inter",sans-serif;color:var(--text);background:var(--white);outline:none;transition:border-color .2s,box-shadow .2s}
+    .fg input:focus,.fg select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,80,255,.1)}
+    .input-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .btn-calc{padding:.7rem 1.5rem;background:var(--primary);color:var(--white);font-size:.875rem;font-weight:700;border:none;border-radius:var(--radius);cursor:pointer;transition:background .2s,transform .15s;align-self:flex-start;margin-top:.25rem}
+    .btn-calc:hover{background:var(--primary-dark);transform:translateY(-1px)}
+    .result-big{font-size:2rem;font-weight:800;color:var(--primary);letter-spacing:-.03em}
+    .result-label{font-size:.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+    .result-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--border)}
+    .result-row:last-child{border-bottom:none}
+    .result-row .rk{font-size:.85rem;color:var(--text-muted)}
+    .result-row .rv{font-size:.9rem;font-weight:700;color:var(--dark)}
+    .badge-good{display:inline-block;background:var(--green-light);color:var(--green);font-size:.75rem;font-weight:700;padding:.2rem .6rem;border-radius:999px}
+    .badge-warn{display:inline-block;background:var(--orange-light);color:var(--orange);font-size:.75rem;font-weight:700;padding:.2rem .6rem;border-radius:999px}
+    .badge-bad{display:inline-block;background:var(--red-light);color:var(--red);font-size:.75rem;font-weight:700;padding:.2rem .6rem;border-radius:999px}
+    .savings-callout{background:var(--green-light);border:1px solid rgba(16,185,129,.2);border-radius:var(--radius);padding:1rem;margin-top:.75rem;text-align:center}
+    .savings-callout .amount{font-size:1.5rem;font-weight:800;color:var(--green)}
+    .savings-callout .label{font-size:.78rem;color:var(--text-muted);margin-top:.15rem}
+    .amort-table{width:100%;border-collapse:collapse;font-size:.78rem;margin-top:.75rem}
+    .amort-table th{background:var(--primary-light);color:var(--primary);font-weight:700;padding:.45rem .5rem;text-align:left;position:sticky;top:0}
+    .amort-table td{padding:.4rem .5rem;border-bottom:1px solid var(--border)}
+    .amort-table tr:nth-child(even){background:rgba(0,0,0,.015)}
+    .table-scroll{max-height:220px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius)}
+    .debt-list{display:flex;flex-direction:column;gap:.5rem}
+    .debt-entry{display:grid;grid-template-columns:2fr 1.5fr 1fr 1fr auto;gap:.5rem;align-items:end}
+    .debt-entry .fg input{font-size:.8rem;padding:.5rem .6rem}
+    .btn-sm{padding:.4rem .75rem;font-size:.75rem;font-weight:600;border-radius:6px;border:none;cursor:pointer}
+    .btn-add{background:var(--primary-light);color:var(--primary)}.btn-add:hover{background:#d0dfff}
+    .btn-remove{background:var(--red-light);color:var(--red)}.btn-remove:hover{background:#fecaca}
+    .progress-bar{height:10px;background:var(--border);border-radius:999px;overflow:hidden;margin-top:.5rem}
+    .progress-fill{height:100%;border-radius:999px;transition:width .5s ease}
+    footer{background:var(--dark);color:rgba(255,255,255,.5);text-align:center;padding:2rem;font-size:.8rem;margin-top:2rem}
+    footer a{color:rgba(255,255,255,.6);text-decoration:none}
+    @media(max-width:800px){.tool-grid{grid-template-columns:1fr}.input-row{grid-template-columns:1fr}.debt-entry{grid-template-columns:1fr 1fr;gap:.4rem}}
+  </style>
+</head>
+<body>
+<nav><div class="nav-inner"><a href="index.html" class="logo"><div class="logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><span class="logo-text">The <span>Smart</span> Financial</span></a><div class="nav-user"><span class="greeting">Welcome, <strong id="userName">there</strong></span></div></div></nav>
+<section class="welcome-banner"><div class="welcome-inner"><h1 id="welcomeTitle">Your Financial Toolkit</h1><p>12 free calculators to help you save real money on every financial decision.</p></div></section>
+<div class="toc"><div class="toc-inner"><a href="#loan-calc">Loan Payment</a><a href="#cc-payoff">Credit Card Payoff</a><a href="#apr-reveal">APR Revealer</a><a href="#cash-advance">Cash Advance</a><a href="#pay-advance">Pay Advance</a><a href="#debt-strategy">Debt Strategy</a><a href="#refinance">Refinance</a><a href="#dti">Debt-to-Income</a><a href="#emergency">Emergency Fund</a><a href="#loan-compare">Loan Compare</a><a href="#biweekly">Bi-Weekly</a><a href="#cc-minimum">Min Payment Trap</a></div></div>
+<div class="tools-container">
+
+<!-- TOOL 1: LOAN PAYMENT -->
+<section class="tool-section" id="loan-calc">
+  <h2><span class="tool-num">1</span> Loan Payment Calculator</h2>
+  <p>Calculate your exact monthly payment, total interest cost, and see a full amortization schedule for any loan.</p>
+  <div class="tool-card"><div class="tool-grid">
+    <div class="input-side">
+      <div class="fg"><label>Loan Amount ($)</label><input type="number" id="lp-amount" value="25000" min="0" step="100"/></div>
+      <div class="input-row"><div class="fg"><label>Interest Rate (%)</label><input type="number" id="lp-rate" value="6.5" min="0" step="0.1"/></div><div class="fg"><label>Loan Term (years)</label><input type="number" id="lp-term" value="5" min="1" step="1"/></div></div>
+      <button class="btn-calc" onclick="calcLoan()">Calculate Payment</button>
+    </div>
+    <div class="result-side">
+      <div><span class="result-label">Monthly Payment</span><div class="result-big" id="lp-monthly">--</div></div>
+      <div class="result-row"><span class="rk">Total of Payments</span><span class="rv" id="lp-total">--</span></div>
+      <div class="result-row"><span class="rk">Total Interest</span><span class="rv" id="lp-interest">--</span></div>
+      <div class="result-row"><span class="rk">Interest-to-Loan Ratio</span><span class="rv" id="lp-ratio">--</span></div>
+      <div class="table-scroll" id="lp-amort-wrap" style="display:none"><table class="amort-table"><thead><tr><th>Year</th><th>Principal</th><th>Interest</th><th>Balance</th></tr></thead><tbody id="lp-amort-body"></tbody></table></div>
+      <button class="btn-calc" style="margin-top:.5rem;background:var(--dark);font-size:.78rem;padding:.5rem 1rem" onclick="toggleAmort()">Show Amortization Schedule</button>
+    </div>
+  </div></div>
+</section>
+
+<!-- TOOL 2: CREDIT CARD PAYOFF -->
+<section class="tool-section" id="cc-payoff">
+  <h2><span class="tool-num">2</span> Credit Card Payoff Planner</h2>
+  <p>See exactly how long it takes to pay off your credit card and how much you save by paying more than the minimum.</p>
+  <div class="tool-card"><div class="tool-grid">
+    <div class="input-side">
+      <div class="fg"><label>Current Balance ($)</label><input type="number" id="cc-balance" value="5000" min="0" step="100"/></div>
+      <div class="input-row"><div class="fg"><label>APR (%)</label><input type="number" id="cc-apr" value="22.99" min="0" step="0.01"/></div><div class="fg"><label>Monthly Payment ($)</label><input type="number" id="cc-payment" value="150" min="0" step="10"/></div></div>
+      <button class="btn-calc" onclick="calcCC()">Calculate Payoff</button>
+    </div>
+    <div class="result-side">
+      <div><span class="result-label">Months to Pay Off</span><div class="result-big" id="cc-months">--</div></div>
+      <div class="result-row"><span class="rk">Payoff Date</span><span class="rv" id="cc-date">--</span></div>
+      <div class="result-row"><span class="rk">Total Interest Paid</span><span class="rv" id="cc-total-interest">--</span></div>
+      <div class="result-row"><span class="rk">Total Amount Paid</span><span class="rv" id="cc-total-paid">--</span></div>
+      <div class="savings-callout" id="cc-savings" style="display:none"><div class="amount" id="cc-savings-amount">$0</div><div class="label">saved vs minimum payments</div></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- TOOL 3: APR TRUE COST -->
+<section class="tool-section" id="apr-reveal">
+  <h2><span class="tool-num">3</span> APR True Cost Revealer</h2>
+  <p>See the real dollar cost of any APR. Compare two loan offers side by side.</p>
+  <div class="tool-card"><div class="tool-grid">
+    <div class="input-side">
+      <h4 style="font-size:.85rem;color:var(--dark);margin-bottom:.25rem">Offer A</h4>
+      <div class="input-row"><div class="fg"><label>Amount ($)</label><input type="number" id="apr-a-amt" value="10000" min="0"/></div><div class="fg"><label>APR (%)</label><input type="number" id="apr-a-rate" value="8.99" min="0" step="0.01"/></div></div>
+      <div class="input-row"><div class="fg"><label>Term (months)</label><input type="number" id="apr-a-term" value="36" min="1"/></div><div class="fg"><label>Fees ($)</label><input type="number" id="apr-a-fees" value="250" min="0"/></div></div>
+      <h4 style="font-size:.85rem;color:var(--dark);margin:.75rem 0 .25rem">Offer B</h4>
+      <div class="input-row"><div class="fg"><label>Amount ($)</label><input type="number" id="apr-b-amt" value="10000" min="0"/></div><div class="fg"><label>APR (%)</label><input type="number" id="apr-b-rate" value="6.49" min="0" step="0.01"/></div></div>
+      <div class="input-row"><div class="fg"><label>Term (months)</label><input type="number" id="apr-b-term" value="48" min="1"/></div><div class="fg"><label>Fees ($)</label><input type="number" id="apr-b-fees" value="500" min="0"/></div></div>
+      <button class="btn-calc" onclick="calcAPR()">Compare Offers</button>
+    </div>
+    <div class="result-side">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem"><div style="text-align:center"><span class="result-label">Offer A Total</span><div class="result-big" id="apr-a-total" style="font-size:1.4rem">--</div></div><div style="text-align:center"><span class="result-label">Offer B Total</span><div class="result-big" id="apr-b-total" style="font-size:1.4rem">--</div></div></div>
+      <div class="result-row"><span class="rk">Offer A Monthly</span><span class="rv" id="apr-a-monthly">--</span></div>
+      <div class="result-row"><span class="rk">Offer B Monthly</span><span class="rv" id="apr-b-monthly">--</span></div>
+      <div class="savings-callout"><div class="amount" id="apr-winner">--</div><div class="label">in total cost over the life of the loan</div></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- TOOL 4: CASH ADVANCE -->
+<section class="tool-section" id="cash-advance">
+  <h2><span class="tool-num">4</span> Cash Advance Fee Calculator</h2>
+  <p>Cash advances are expensive. See the real cost including upfront fees and daily interest.</p>
+  <div class="tool-card"><div class="tool-grid">
+    <div class="input-side">
+      <div class="fg"><label>Cash Advance Amount ($)</label><input type="number" id="ca-amount" value="500" min="0"/></div>
+      <div class="input-row"><div class="fg"><label>Cash Advance APR (%)</label><input type="number" id="ca-apr" value="29.99" min="0" step="0.01"/></div><div class="fg"><label>Upfront Fee (%)</label><input type="number" id="ca-fee" value="5" min="0" step="0.5"/></div></div>
+      <div class="fg"><label>Days Until You Repay</label><input type="number" id="ca-days" value="30" min="1"/></div>
+      <button class="btn-calc" onclick="calcCashAdv()">Calculate True Cost</button>
+    </div>
+    <div class="result-side">
+      <div><span class="result-label">Total Cost of This Advance</span><div class="result-big" id="ca-total">--</div></div>
+      <div class="result-row"><span class="rk">Upfront Fee</span><span class="rv" id="ca-upfront">--</span></div>
+      <div class="result-row"><span class="rk">Interest</span><span class="rv" id="ca-interest">--</span></div>
+      <div class="result-row"><span class="rk">Total You Repay</span><span class="rv" id="ca-repay">--</span></div>
+      <div class="result-row"><span class="rk">Effective APR</span><span class="rv" id="ca-effective">--</span></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- TOOL 5: PAY ADVANCE -->
+<section class="tool-section" id="pay-advance">
+  <h2><span class="tool-num">5</span> Paycheck Advance Analyzer</h2>
+  <p>Apps like Earnin, Dave, and Brigit charge fees or tips. See the true annualized cost.</p>
+  <div class="tool-card"><div class="tool-grid">
+    <div class="input-side">
+      <div class="fg"><label>Advance Amount ($)</label><input type="number" id="pa-amount" value="200" min="0"/></div>
+      <div class="input-row"><div class="fg"><label>Fee / Tip ($)</label><input type="number" id="pa-fee" value="5" min="0" step="0.5"/></div><div class="fg"><label>Days Until Payday</label><input type="number" id="pa-days" value="7" min="1"/></div></div>
+      <div class="fg"><label>Monthly Subscription ($)</label><input type="number" id="pa-sub" value="9.99" min="0" step="0.01"/></div>
+      <button class="btn-calc" onclick="calcPayAdv()">Analyze Cost</button>
+    </div>
+    <div class="result-side">
+      <div><span class="result-label">Total Cost This Advance</span><div class="result-big" id="pa-total">--</div></div>
+      <div class="result-row"><span class="rk">Cost as % of Advance</span><span class="rv" id="pa-pct">--</span></div>
+      <div class="result-row"><span class="rk">Annualized APR Equivalent</span><span class="rv" id="pa-apr">--</span></div>
+      <div class="result-row"><span class="rk">Yearly Cost (if used every payday)</span><span class="rv" id="pa-yearly">--</span></div>
+      <div class="savings-callout" style="background:var(--red-light);border-color:rgba(239,68,68,.2)"><div class="amount" style="color:var(--red)" id="pa-warning">--</div><div class="label">could go to savings or paying down debt instead</div></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- TOOL 6: DEBT STRATEGY -->
+<section class="tool-section" id="debt-strategy">
+  <h2><span class="tool-num">6</span> Debt Avalanche vs. Snowball</h2>
+  <p>Enter your debts and a monthly budget. See exactly how much time and money each strategy saves.</p>
+  <div class="tool-card">
+    <div class="input-side" style="margin-bottom:1rem">
+      <div class="debt-list" id="debt-list">
+        <div class="debt-entry"><div class="fg"><label>Debt Name</label><input type="text" value="Credit Card"/></div><div class="fg"><label>Balance ($)</label><input type="number" value="4500" min="0"/></div><div class="fg"><label>APR (%)</label><input type="number" value="22.99" min="0" step="0.01"/></div><div class="fg"><label>Min Pay</label><input type="number" value="90" min="0"/></div><div></div></div>
+        <div class="debt-entry"><div class="fg"><label>Debt Name</label><input type="text" value="Car Loan"/></div><div class="fg"><label>Balance ($)</label><input type="number" value="8000" min="0"/></div><div class="fg"><label>APR (%)</label><input type="number" value="6.5" min="0" step="0.01"/></div><div class="fg"><label>Min Pay</label><input type="number" value="250" min="0"/></div><div><button class="btn-sm btn-remove" onclick="removeDebt(this)">X</button></div></div>
+        <div class="debt-entry"><div class="fg"><label>Debt Name</label><input type="text" value="Student Loan"/></div><div class="fg"><label>Balance ($)</label><input type="number" value="15000" min="0"/></div><div class="fg"><label>APR (%)</label><input type="number" value="5.5" min="0" step="0.01"/></div><div class="fg"><label>Min Pay</label><input type="number" value="175" min="0"/></div><div><button class="btn-sm btn-remove" onclick="removeDebt(this)">X</button></div></div>
+      </div>
+      <div style="display:flex;gap:.75rem;margin-top:.75rem;align-items:end;flex-wrap:wrap">
+        <button class="btn-sm btn-add" onclick="addDebt()">+ Add Debt</button>
+        <div class="fg" style="flex:0 0 200px"><label>Extra Monthly Budget ($)</label><input type="number" id="debt-extra" value="200" min="0"/></div>
+        <button class="btn-calc" onclick="calcDebtStrategy()">Compare Strategies</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1rem">
+      <div class="result-side" style="border:2px solid var(--primary)"><span class="result-label">Avalanche (Highest APR First)</span><div class="result-big" id="ds-av-months">--</div><div class="result-row"><span class="rk">Total Interest</span><span class="rv" id="ds-av-interest">--</span></div><div class="result-row"><span class="rk">Total Paid</span><span class="rv" id="ds-av-total">--</span></div></div>
+      <div class="result-side"><span class="result-label">Snowball (Smallest Balance First)</span><div class="result-big" id="ds-sb-months">--</div><div class="result-row"><span class="rk">Total Interest</span><span class="rv" id="ds-sb-interest">--</span></div><div class="result-row"><span class="rk">Total Paid</span><span class="rv" id="ds-sb-total">--</span></div></div>
+    </div>
+    <div class="savings-callout" id="ds-diff" style="margin-top:1rem"><div class="amount">--</div><div class="label">--</div></div>
+  </div>
+</section>
+
+<!-- TOOL 7: REFINANCE -->
+<section class="tool-section" id="refinance">
+  <h2><span class="tool-num">7</span> Refinance Savings Calculator</h2>
+  <p>Considering refinancing? See if the lower rate saves enough to justify closing costs.</p>
+  <div class="tool-card"><div class="tool-grid">
+    <div class="input-side">
+      <div class="fg"><label>Current Loan Balance ($)</label><input type="number" id="refi-balance" value="180000" min="0"/></div>
+      <div class="input-row"><div class="fg"><label>Current Rate (%)</label><input type="number" id="refi-old-rate" value="6.75" min="0" step="0.01"/></div><div class="fg"><label>Remaining Term (years)</label><input type="number" id="refi-old-term" value="27" min="1"/></div></div>
+      <div class="input-row"><div class="fg"><label>New Rate (%)</label><input type="number" id="refi-new-rate" value="5.5" min="0" step="0.01"/></div><div class="fg"><label>New Term (years)</label><input type="number" id="refi-new-term" value="30" min="1"/></div></div>
+      <div class="fg"><label>Closing Costs ($)</label><input type="number" id="refi-costs" value="4500" min="0"/></div>
+      <button class="btn-calc" onclick="calcRefi()">Calculate Savings</button>
+    </div>
+    <div class="result-side">
+      <div><span class="result-label">Monthly Savings</span><div class="result-big" id="refi-monthly-save">--</div></div>
+      <div class="result-row"><span class="rk">Current Payment</span><span class="rv" id="refi-old-pmt">--</span></div>
+      <div class="result-row"><span class="rk">New Payment</span><span class="rv" id="refi-new-pmt">--</span></div>
+      <div class="result-row"><span class="rk">Break-Even Point</span><span class="rv" id="refi-breakeven">--</span></div>
+      <div class="result-row"><span class="rk">Net Savings (after costs)</span><span class="rv" id="refi-net-save">--</span></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- TOOL 8: DTI -->
+<section class="tool-section" id="dti">
+  <h2><span class="tool-num">8</span> Debt-to-Income Ratio Calculator</h2>
+  <p>Lenders use DTI to decide if you qualify. Calculate yours before you apply.</p>
+  <div class="tool-card"><div class="tool-grid">
+    <div class="input-side">
+      <div class="fg"><label>Monthly Gross Income ($)</label><input type="number" id="dti-income" value="5500" min="0"/></div>
+      <h4 style="font-size:.85rem;color:var(--dark);margin:.5rem 0 .25rem">Monthly Debt Payments</h4>
+      <div class="input-row"><div class="fg"><label>Rent / Mortgage</label><input type="number" id="dti-housing" value="1400" min="0"/></div><div class="fg"><label>Car Payment</label><input type="number" id="dti-car" value="350" min="0"/></div></div>
+      <div class="input-row"><div class="fg"><label>Credit Cards (min)</label><input type="number" id="dti-cc" value="120" min="0"/></div><div class="fg"><label>Student Loans</label><input type="number" id="dti-student" value="200" min="0"/></div></div>
+      <div class="fg"><label>Other Debt Payments</label><input type="number" id="dti-other" value="0" min="0"/></div>
+      <button class="btn-calc" onclick="calcDTI()">Calculate DTI</button>
+    </div>
+    <div class="result-side">
+      <div><span class="result-label">Your Debt-to-Income Ratio</span><div class="result-big" id="dti-result">--</div></div>
+      <div id="dti-badge" style="margin:.5rem 0">--</div>
+      <div class="progress-bar"><div class="progress-fill" id="dti-bar" style="width:0%;background:var(--orange)"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--text-muted);margin-top:.25rem"><span>0%</span><span>36% Good</span><span>43% Max</span><span>50%+</span></div>
+      <div class="result-row" style="margin-top:.75rem"><span class="rk">Total Monthly Debt</span><span class="rv" id="dti-total-debt">--</span></div>
+      <div class="result-row"><span class="rk">Remaining After Debt</span><span class="rv" id="dti-remaining">--</span></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- TOOL 9: EMERGENCY FUND -->
+<section class="tool-section" id="emergency">
+  <h2><span class="tool-num">9</span> Emergency Fund Calculator</h2>
+  <p>Find out exactly how much you need saved and how long it will take to build your safety net.</p>
+  <div class="tool-card"><div class="tool-grid">
+    <div class="input-side">
+      <div class="fg"><label>Monthly Expenses ($)</label><input type="number" id="ef-expenses" value="3200" min="0"/></div>
+      <div class="input-row"><div class="fg"><label>Months to Cover</label><input type="number" id="ef-months" value="6" min="1"/></div><div class="fg"><label>Current Savings ($)</label><input type="number" id="ef-current" value="2000" min="0"/></div></div>
+      <div class="fg"><label>Monthly Savings Contribution ($)</label><input type="number" id="ef-contrib" value="400" min="0"/></div>
+      <button class="btn-calc" onclick="calcEmergency()">Calculate Goal</button>
+    </div>
+    <div class="result-side">
+      <div><span class="result-label">Emergency Fund Goal</span><div class="result-big" id="ef-goal">--</div></div>
+      <div class="result-row"><span class="rk">Still Needed</span><span class="rv" id="ef-needed">--</span></div>
+      <div class="result-row"><span class="rk">Months to Reach Goal</span><span class="rv" id="ef-time">--</span></div>
+      <div class="result-row"><span class="rk">Target Date</span><span class="rv" id="ef-date">--</span></div>
+      <div><span class="result-label" style="margin-top:.5rem;display:block">Progress</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="ef-bar" style="width:0%;background:var(--primary)"></div></div>
+      <div style="text-align:center;font-size:.8rem;font-weight:600;color:var(--primary);margin-top:.3rem" id="ef-pct">--</div>
+    </div>
+  </div></div>
+</section>
+
+<!-- TOOL 10: LOAN COMPARISON -->
+<section class="tool-section" id="loan-compare">
+  <h2><span class="tool-num">10</span> Loan Comparison Tool</h2>
+  <p>Comparing two loan offers? Plug in both and instantly see which costs less.</p>
+  <div class="tool-card"><div class="tool-grid">
+    <div class="input-side">
+      <h4 style="font-size:.85rem;color:var(--dark);margin-bottom:.25rem">Loan A</h4>
+      <div class="input-row"><div class="fg"><label>Amount ($)</label><input type="number" id="lc-a-amt" value="20000" min="0"/></div><div class="fg"><label>Rate (%)</label><input type="number" id="lc-a-rate" value="7.5" min="0" step="0.01"/></div></div>
+      <div class="fg"><label>Term (months)</label><input type="number" id="lc-a-term" value="60" min="1"/></div>
+      <h4 style="font-size:.85rem;color:var(--dark);margin:.75rem 0 .25rem">Loan B</h4>
+      <div class="input-row"><div class="fg"><label>Amount ($)</label><input type="number" id="lc-b-amt" value="20000" min="0"/></div><div class="fg"><label>Rate (%)</label><input type="number" id="lc-b-rate" value="5.9" min="0" step="0.01"/></div></div>
+      <div class="fg"><label>Term (months)</label><input type="number" id="lc-b-term" value="48" min="1"/></div>
+      <button class="btn-calc" onclick="calcLoanCompare()">Compare Loans</button>
+    </div>
+    <div class="result-side">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:.5rem"><div style="text-align:center"><span class="result-label">Loan A Monthly</span><div class="result-big" style="font-size:1.4rem" id="lc-a-pmt">--</div></div><div style="text-align:center"><span class="result-label">Loan B Monthly</span><div class="result-big" style="font-size:1.4rem" id="lc-b-pmt">--</div></div></div>
+      <div class="result-row"><span class="rk">Loan A Total</span><span class="rv" id="lc-a-total">--</span></div>
+      <div class="result-row"><span class="rk">Loan B Total</span><span class="rv" id="lc-b-total">--</span></div>
+      <div class="result-row"><span class="rk">Loan A Interest</span><span class="rv" id="lc-a-int">--</span></div>
+      <div class="result-row"><span class="rk">Loan B Interest</span><span class="rv" id="lc-b-int">--</span></div>
+      <div class="savings-callout"><div class="amount" id="lc-winner">--</div><div class="label">in total cost</div></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- TOOL 11: BI-WEEKLY -->
+<section class="tool-section" id="biweekly">
+  <h2><span class="tool-num">11</span> Bi-Weekly Payment Savings</h2>
+  <p>Paying every two weeks instead of monthly makes one extra payment per year. See how much that saves.</p>
+  <div class="tool-card"><div class="tool-grid">
+    <div class="input-side">
+      <div class="fg"><label>Loan Balance ($)</label><input type="number" id="bw-balance" value="250000" min="0"/></div>
+      <div class="input-row"><div class="fg"><label>Interest Rate (%)</label><input type="number" id="bw-rate" value="6.5" min="0" step="0.01"/></div><div class="fg"><label>Loan Term (years)</label><input type="number" id="bw-term" value="30" min="1"/></div></div>
+      <button class="btn-calc" onclick="calcBiweekly()">Calculate Bi-Weekly Savings</button>
+    </div>
+    <div class="result-side">
+      <div><span class="result-label">Interest Saved</span><div class="result-big" id="bw-saved">--</div></div>
+      <div class="result-row"><span class="rk">Monthly Payment</span><span class="rv" id="bw-monthly">--</span></div>
+      <div class="result-row"><span class="rk">Bi-Weekly Payment</span><span class="rv" id="bw-biweekly">--</span></div>
+      <div class="result-row"><span class="rk">Original Payoff</span><span class="rv" id="bw-orig-payoff">--</span></div>
+      <div class="result-row"><span class="rk">New Payoff</span><span class="rv" id="bw-new-payoff">--</span></div>
+      <div class="result-row"><span class="rk">Time Saved</span><span class="rv" id="bw-time-saved">--</span></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- TOOL 12: MIN PAYMENT TRAP -->
+<section class="tool-section" id="cc-minimum">
+  <h2><span class="tool-num">12</span> Credit Card Minimum Payment Trap</h2>
+  <p>See the shocking truth: how long your credit card takes to pay off with only minimum payments.</p>
+  <div class="tool-card"><div class="tool-grid">
+    <div class="input-side">
+      <div class="fg"><label>Credit Card Balance ($)</label><input type="number" id="mp-balance" value="8000" min="0"/></div>
+      <div class="input-row"><div class="fg"><label>APR (%)</label><input type="number" id="mp-apr" value="24.99" min="0" step="0.01"/></div><div class="fg"><label>Min Payment (% of bal)</label><input type="number" id="mp-pct" value="2" min="1" step="0.5"/></div></div>
+      <div class="fg"><label>Minimum Floor Payment ($)</label><input type="number" id="mp-floor" value="25" min="0"/></div>
+      <button class="btn-calc" onclick="calcMinPay()">Show Me the Trap</button>
+    </div>
+    <div class="result-side">
+      <div><span class="result-label">Time to Pay Off (Minimum Only)</span><div class="result-big" id="mp-months" style="color:var(--red)">--</div></div>
+      <div class="result-row"><span class="rk">That is...</span><span class="rv" id="mp-years" style="color:var(--red)">--</span></div>
+      <div class="result-row"><span class="rk">Total Interest Paid</span><span class="rv" id="mp-interest">--</span></div>
+      <div class="result-row"><span class="rk">Total Amount Paid</span><span class="rv" id="mp-total-paid">--</span></div>
+      <div class="result-row"><span class="rk">Interest Multiplier</span><span class="rv" id="mp-multiplier">--</span></div>
+      <div class="savings-callout" style="background:var(--green-light);border-color:rgba(16,185,129,.2);margin-top:.75rem"><div class="label">If you paid <strong>$300/mo</strong> instead:</div><div class="amount" style="color:var(--green)" id="mp-alt-months">--</div></div>
+    </div>
+  </div></div>
+</section>
+
+</div>
+<footer><p>&copy; 2026 The Smart Financial. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p><p style="margin-top:.5rem">This site provides educational financial tools only. Not financial advice.</p></footer>
+
+<script>
+var D=document.getElementById.bind(document);
+var V=function(id){return parseFloat(D(id).value)||0};
+var fmt=function(n){return n.toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0})};
+var fmt2=function(n){return n.toLocaleString("en-US",{style:"currency",currency:"USD",minimumFractionDigits:2,maximumFractionDigits:2})};
+var fmtPct=function(n){return n.toFixed(1)+"%"};
+function pmt(rate,nper,pv){if(rate===0)return pv/nper;return pv*rate*Math.pow(1+rate,nper)/(Math.pow(1+rate,nper)-1)}
+function monthName(offset){var d=new Date();d.setMonth(d.getMonth()+offset);return d.toLocaleDateString("en-US",{month:"short",year:"numeric"})}
+
+try{var lead=JSON.parse(sessionStorage.getItem("tsf_lead"));if(lead&&lead.firstName){D("userName").textContent=lead.firstName;D("welcomeTitle").textContent=lead.firstName+", Your Financial Toolkit"}}catch(e){}
+
+function calcLoan(){
+  var P=V("lp-amount"),r=V("lp-rate")/100/12,n=V("lp-term")*12;
+  if(P<=0||n<=0)return;var m=pmt(r,n,P);var total=m*n;
+  D("lp-monthly").textContent=fmt2(m);D("lp-total").textContent=fmt(total);
+  D("lp-interest").textContent=fmt(total-P);D("lp-ratio").textContent=fmtPct((total-P)/P*100);
+  var tbody=D("lp-amort-body");tbody.innerHTML="";
+  var bal=P,yP=0,yI=0;
+  for(var i=1;i<=n;i++){var ip=bal*r;var pp=m-ip;bal-=pp;yP+=pp;yI+=ip;
+    if(i%12===0||i===n){var row=tbody.insertRow();row.innerHTML="<td>"+Math.ceil(i/12)+"</td><td>"+fmt(yP)+"</td><td>"+fmt(yI)+"</td><td>"+fmt(Math.max(bal,0))+"</td>";yP=0;yI=0}}
+}
+function toggleAmort(){var w=D("lp-amort-wrap");w.style.display=w.style.display==="none"?"block":"none"}
+
+function calcCC(){
+  var bal=V("cc-balance"),apr=V("cc-apr")/100,payment=V("cc-payment");
+  var mr=apr/12,months=0,totalInt=0;
+  if(payment<=bal*mr){D("cc-months").textContent="Never";D("cc-date").textContent="Payment too low!";D("cc-total-interest").textContent="Infinite";D("cc-total-paid").textContent="Infinite";return}
+  var b=bal;while(b>0.01&&months<600){var interest=b*mr;totalInt+=interest;b=b+interest-Math.min(payment,b+interest);months++}
+  D("cc-months").textContent=months;D("cc-date").textContent=monthName(months);
+  D("cc-total-interest").textContent=fmt2(totalInt);D("cc-total-paid").textContent=fmt2(bal+totalInt);
+  var bMin=bal,mMin=0,intMin=0;
+  while(bMin>0.01&&mMin<600){var i2=bMin*mr;intMin+=i2;var mp=Math.max(25,bMin*0.02);bMin=bMin+i2-Math.min(mp,bMin+i2);mMin++}
+  var saved=intMin-totalInt;
+  if(saved>0){D("cc-savings").style.display="block";D("cc-savings-amount").textContent=fmt(saved)}else{D("cc-savings").style.display="none"}
+}
+
+function calcAPR(){
+  var aA=V("apr-a-amt"),aR=V("apr-a-rate")/100/12,aT=V("apr-a-term"),aF=V("apr-a-fees");
+  var bA=V("apr-b-amt"),bR=V("apr-b-rate")/100/12,bT=V("apr-b-term"),bF=V("apr-b-fees");
+  var aP=pmt(aR,aT,aA),bP=pmt(bR,bT,bA);var aTot=aP*aT+aF,bTot=bP*bT+bF;
+  D("apr-a-total").textContent=fmt(aTot);D("apr-b-total").textContent=fmt(bTot);
+  D("apr-a-monthly").textContent=fmt2(aP);D("apr-b-monthly").textContent=fmt2(bP);
+  var diff=Math.abs(aTot-bTot);
+  if(aTot<bTot){D("apr-winner").textContent="Offer A saves "+fmt(diff);D("apr-winner").style.color="var(--green)"}
+  else if(bTot<aTot){D("apr-winner").textContent="Offer B saves "+fmt(diff);D("apr-winner").style.color="var(--green)"}
+  else{D("apr-winner").textContent="Both offers cost the same"}
+}
+
+function calcCashAdv(){
+  var amt=V("ca-amount"),apr=V("ca-apr")/100,feePct=V("ca-fee")/100,days=V("ca-days");
+  var upfront=amt*feePct;var interest=amt*(apr/365)*days;var total=upfront+interest;
+  var effAPR=(total/amt)*(365/days)*100;
+  D("ca-total").textContent=fmt2(total);D("ca-upfront").textContent=fmt2(upfront);
+  D("ca-interest").textContent=fmt2(interest);D("ca-repay").textContent=fmt2(amt+total);
+  var badge=effAPR>50?"badge-bad":effAPR>25?"badge-warn":"badge-good";
+  D("ca-effective").innerHTML="<span class=""+badge+"">"+fmtPct(effAPR)+"</span>";
+}
+
+function calcPayAdv(){
+  var amt=V("pa-amount"),fee=V("pa-fee"),days=V("pa-days"),sub=V("pa-sub");
+  var totalCost=fee+sub;var pct=(totalCost/amt)*100;
+  var annAPR=(totalCost/amt)*(365/days)*100;var yearly=totalCost*(365/days);
+  D("pa-total").textContent=fmt2(totalCost);D("pa-pct").textContent=fmtPct(pct);
+  var badge=annAPR>100?"badge-bad":annAPR>36?"badge-warn":"badge-good";
+  D("pa-apr").innerHTML="<span class=""+badge+"">"+fmtPct(annAPR)+"</span>";
+  D("pa-yearly").textContent=fmt2(yearly);D("pa-warning").textContent=fmt2(yearly)+"/yr";
+}
+
+function addDebt(){var list=D("debt-list");var entry=document.createElement("div");entry.className="debt-entry";entry.innerHTML="<div class="fg"><label>Name</label><input type="text" value="New Debt"/></div><div class="fg"><label>Balance</label><input type="number" value="1000" min="0"/></div><div class="fg"><label>APR %</label><input type="number" value="15" min="0" step="0.01"/></div><div class="fg"><label>Min Pay</label><input type="number" value="50" min="0"/></div><div><button class="btn-sm btn-remove" onclick="removeDebt(this)">X</button></div>";list.appendChild(entry)}
+function removeDebt(btn){btn.closest(".debt-entry").remove()}
+function getDebts(){var entries=document.querySelectorAll(".debt-entry");return Array.from(entries).map(function(e){var inp=e.querySelectorAll("input");return{balance:parseFloat(inp[1].value)||0,apr:parseFloat(inp[2].value)||0,minPay:parseFloat(inp[3].value)||0}})}
+function simulatePayoff(debts,extra,sortFn){
+  var list=debts.map(function(d){return{apr:d.apr,minPay:d.minPay,bal:d.balance}});
+  var months=0,totalInterest=0;
+  while(list.some(function(d){return d.bal>0.01})&&months<600){
+    list.sort(sortFn);
+    for(var i=0;i<list.length;i++){if(list[i].bal<=0)continue;var interest=list[i].bal*(list[i].apr/100/12);totalInterest+=interest;list[i].bal+=interest;var pay=Math.min(list[i].minPay,list[i].bal);list[i].bal-=pay}
+    var extraLeft=extra;for(var j=0;j<list.length;j++){if(list[j].bal<=0||extraLeft<=0)continue;var p=Math.min(extraLeft,list[j].bal);list[j].bal-=p;extraLeft-=p}
+    months++}
+  var totalPaid=debts.reduce(function(s,d){return s+d.balance},0)+totalInterest;
+  return{months:months,totalInterest:totalInterest,totalPaid:totalPaid}}
+function calcDebtStrategy(){
+  var debts=getDebts();var extra=V("debt-extra");
+  var av=simulatePayoff(debts,extra,function(a,b){return b.apr-a.apr});
+  var sb=simulatePayoff(debts,extra,function(a,b){return a.bal-b.bal});
+  D("ds-av-months").textContent=av.months+" months";D("ds-av-interest").textContent=fmt(av.totalInterest);D("ds-av-total").textContent=fmt(av.totalPaid);
+  D("ds-sb-months").textContent=sb.months+" months";D("ds-sb-interest").textContent=fmt(sb.totalInterest);D("ds-sb-total").textContent=fmt(sb.totalPaid);
+  var diff=sb.totalInterest-av.totalInterest;var mDiff=sb.months-av.months;
+  if(diff>0){D("ds-diff").innerHTML="<div class="amount">Avalanche saves "+fmt(diff)+"</div><div class="label">and pays off "+Math.abs(mDiff)+" month"+(Math.abs(mDiff)!==1?"s":"")+" sooner</div>"}
+  else{D("ds-diff").innerHTML="<div class="amount">Both strategies cost about the same</div><div class="label">Snowball gives faster psychological wins</div>"}}
+
+function calcRefi(){
+  var bal=V("refi-balance");var oldR=V("refi-old-rate")/100/12,oldN=V("refi-old-term")*12;
+  var newR=V("refi-new-rate")/100/12,newN=V("refi-new-term")*12;var costs=V("refi-costs");
+  var oldPmt=pmt(oldR,oldN,bal);var newPmt=pmt(newR,newN,bal);
+  var monthlySave=oldPmt-newPmt;var breakeven=monthlySave>0?Math.ceil(costs/monthlySave):0;
+  var netSave=oldPmt*oldN-(newPmt*newN+costs);
+  D("refi-monthly-save").textContent=fmt(monthlySave)+"/mo";D("refi-monthly-save").style.color=monthlySave>0?"var(--green)":"var(--red)";
+  D("refi-old-pmt").textContent=fmt2(oldPmt);D("refi-new-pmt").textContent=fmt2(newPmt);
+  D("refi-breakeven").textContent=breakeven+" months";D("refi-net-save").textContent=fmt(netSave)}
+
+function calcDTI(){
+  var income=V("dti-income");var debt=V("dti-housing")+V("dti-car")+V("dti-cc")+V("dti-student")+V("dti-other");
+  var ratio=income>0?(debt/income)*100:0;
+  D("dti-result").textContent=fmtPct(ratio);D("dti-total-debt").textContent=fmt(debt);D("dti-remaining").textContent=fmt(income-debt);
+  var bar=D("dti-bar");bar.style.width=Math.min(ratio,100)+"%";
+  if(ratio<=36){D("dti-badge").innerHTML="<span class="badge-good">Excellent - you qualify for most loans</span>";bar.style.background="var(--green)"}
+  else if(ratio<=43){D("dti-badge").innerHTML="<span class="badge-warn">Moderate - some lenders may hesitate</span>";bar.style.background="var(--orange)"}
+  else{D("dti-badge").innerHTML="<span class="badge-bad">High - most lenders will decline</span>";bar.style.background="var(--red)"}}
+
+function calcEmergency(){
+  var expenses=V("ef-expenses"),months=V("ef-months"),current=V("ef-current"),contrib=V("ef-contrib");
+  var goal=expenses*months;var needed=Math.max(goal-current,0);
+  var time=contrib>0?Math.ceil(needed/contrib):0;var pct=goal>0?(current/goal*100):0;
+  D("ef-goal").textContent=fmt(goal);D("ef-needed").textContent=fmt(needed);
+  D("ef-time").textContent=time+" months";D("ef-date").textContent=monthName(time);
+  D("ef-bar").style.width=Math.min(pct,100)+"%";D("ef-pct").textContent=fmtPct(pct)+" funded"}
+
+function calcLoanCompare(){
+  var aA=V("lc-a-amt"),aR=V("lc-a-rate")/100/12,aN=V("lc-a-term");
+  var bA=V("lc-b-amt"),bR=V("lc-b-rate")/100/12,bN=V("lc-b-term");
+  var aP=pmt(aR,aN,aA),bP=pmt(bR,bN,bA);var aT=aP*aN,bT=bP*bN;
+  D("lc-a-pmt").textContent=fmt2(aP);D("lc-b-pmt").textContent=fmt2(bP);
+  D("lc-a-total").textContent=fmt(aT);D("lc-b-total").textContent=fmt(bT);
+  D("lc-a-int").textContent=fmt(aT-aA);D("lc-b-int").textContent=fmt(bT-bA);
+  var diff=Math.abs(aT-bT);
+  if(aT<bT){D("lc-winner").textContent="Loan A saves "+fmt(diff);D("lc-winner").style.color="var(--green)"}
+  else if(bT<aT){D("lc-winner").textContent="Loan B saves "+fmt(diff);D("lc-winner").style.color="var(--green)"}
+  else{D("lc-winner").textContent="Both loans cost the same"}}
+
+function calcBiweekly(){
+  var P=V("bw-balance"),rate=V("bw-rate")/100,years=V("bw-term");
+  var r=rate/12,n=years*12;var monthlyPmt=pmt(r,n,P);var biweeklyPmt=monthlyPmt/2;
+  var totalMonthly=monthlyPmt*n;
+  var biweeklyRate=rate/26;var bal=P,totalBW=0,periods=0;
+  while(bal>0.01&&periods<26*40){var interest=bal*biweeklyRate;var pay=Math.min(biweeklyPmt,bal+interest);bal=bal+interest-pay;totalBW+=pay;periods++}
+  var yearsNew=periods/26;var saved=totalMonthly-totalBW;
+  D("bw-monthly").textContent=fmt2(monthlyPmt);D("bw-biweekly").textContent=fmt2(biweeklyPmt);
+  D("bw-orig-payoff").textContent=years+" years";D("bw-new-payoff").textContent=yearsNew.toFixed(1)+" years";
+  D("bw-time-saved").innerHTML="<span class="badge-good">"+(years-yearsNew).toFixed(1)+" years early</span>";
+  D("bw-saved").textContent=fmt(Math.max(saved,0))}
+
+function calcMinPay(){
+  var bal=V("mp-balance"),apr=V("mp-apr")/100,pctMin=V("mp-pct")/100,floor=V("mp-floor");
+  var mr=apr/12,months=0,totalInt=0,b=bal;
+  while(b>0.01&&months<600){var interest=b*mr;totalInt+=interest;var minPay=Math.max(b*pctMin,floor);b=b+interest-Math.min(minPay,b+interest);months++}
+  var totalPaid=bal+totalInt;
+  D("mp-months").textContent=months>=600?"600+":months;
+  D("mp-years").textContent=months>=600?"50+ years!":(months/12).toFixed(1)+" years!";
+  D("mp-interest").textContent=fmt(totalInt);D("mp-total-paid").textContent=fmt(totalPaid);
+  D("mp-multiplier").innerHTML="<span class="badge-bad">"+(totalPaid/bal).toFixed(1)+"x your balance</span>";
+  var b2=bal,m2=0,int2=0,altPay=300;
+  if(altPay>bal*mr){while(b2>0.01&&m2<600){var i2=b2*mr;int2+=i2;b2=b2+i2-Math.min(altPay,b2+i2);m2++}
+  D("mp-alt-months").textContent=m2+" months | Save "+fmt(totalInt-int2)}
+  else{D("mp-alt-months").textContent="Need higher payment"}}
+
+calcLoan();calcCC();calcAPR();calcCashAdv();calcPayAdv();calcDebtStrategy();calcRefi();calcDTI();calcEmergency();calcLoanCompare();calcBiweekly();calcMinPay();
+
+var tocLinks=document.querySelectorAll(".toc a");var sections=document.querySelectorAll(".tool-section");
+var observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){tocLinks.forEach(function(a){a.classList.remove("active")});var link=document.querySelector(".toc a[href="#"+entry.target.id+""]");if(link)link.classList.add("active")}})},{rootMargin:"-160px 0px -60% 0px"});
+sections.forEach(function(s){observer.observe(s)});
+</script></body></html>
