@@ -57,7 +57,7 @@
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
     .form-group { margin-bottom: 1rem; }
     label { display: block; font-size: 0.825rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
-    input[type="text"], input[type="email"] { width: 100%; padding: 0.7rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius); font-size: 0.9rem; font-family: 'Inter', sans-serif; color: var(--text); background: var(--white); transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
+    input[type="text"], input[type="email"], input[type="tel"] { width: 100%; padding: 0.7rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius); font-size: 0.9rem; font-family: 'Inter', sans-serif; color: var(--text); background: var(--white); transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
     input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,80,255,0.12); }
     input.error { border-color: #ef4444; }
     .field-error { font-size: 0.75rem; color: #ef4444; margin-top: 0.3rem; display: none; }
@@ -168,7 +168,11 @@
           <input type="email" id="email" placeholder="john@example.com" autocomplete="email" />
           <span class="field-error" id="emailError">Please enter a valid email address.</span>
         </div>
-        <button type="submit" class="btn-primary">Unlock My Free Financial Tools &rarr;</button>
+        <div class="form-group">
+          <label for="phone">Phone Number <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label>
+          <input type="tel" id="phone" placeholder="(555) 000-0000" autocomplete="tel" />
+        </div>
+        <button type="submit" class="btn-primary" id="submitBtn">Unlock My Free Financial Tools &rarr;</button>
         <p class="form-disclaimer">By continuing you agree to our <a href="#">Privacy Policy</a> &amp; <a href="#">Terms</a>. We never sell your data.</p>
       </form>
     </div>
@@ -237,29 +241,78 @@
 </footer>
 
 <script>
-  const form = document.getElementById('leadForm');
+  // ─── API Configuration ─────────────────────────────────────────────────────
+  // Set this to your endpoint URL to enable server-side lead capture.
+  // Leave as empty string ("") to skip the API call and use local storage only.
+  //
+  // Examples:
+  //   Zapier Webhook : "https://hooks.zapier.com/hooks/catch/XXXXXX/XXXXXXX/"
+  //   Make (Integromat): "https://hook.us1.make.com/XXXXXXXXXXXXXXXXXXXXXXXX"
+  //   GoHighLevel  : "https://services.leadconnectorhq.com/hooks/XXXX/webhook-trigger/XXXX"
+  //   Custom API   : "https://api.yourdomain.com/leads"
+  var API_ENDPOINT = "";
+  // ──────────────────────────────────────────────────────────────────────────
+
+  var form = document.getElementById('leadForm');
+  var submitBtn = document.getElementById('submitBtn');
+
   function showError(inputId, errorId, show) {
     document.getElementById(inputId).classList.toggle('error', show);
     document.getElementById(errorId).style.display = show ? 'block' : 'none';
   }
   function validEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
   form.addEventListener('submit', function(e) {
     e.preventDefault();
-    const fn = document.getElementById('firstName').value.trim();
-    const ln = document.getElementById('lastName').value.trim();
-    const em = document.getElementById('email').value.trim();
-    showError('firstName','firstNameError', !fn);
-    showError('lastName','lastNameError', !ln);
-    showError('email','emailError', !validEmail(em));
+    var fn = document.getElementById('firstName').value.trim();
+    var ln = document.getElementById('lastName').value.trim();
+    var em = document.getElementById('email').value.trim();
+    var ph = document.getElementById('phone').value.trim();
+
+    showError('firstName', 'firstNameError', !fn);
+    showError('lastName',  'lastNameError',  !ln);
+    showError('email',     'emailError',     !validEmail(em));
     if (!fn || !ln || !validEmail(em)) return;
-    sessionStorage.setItem('tsf_lead', JSON.stringify({firstName:fn, lastName:ln, email:em}));
-    window.location.href = 'tools.html';
+
+    var leadData = {
+      firstName : fn,
+      lastName  : ln,
+      email     : em,
+      phone     : ph,
+      source    : 'smart-financial-page',
+      timestamp : new Date().toISOString()
+    };
+
+    // Always save locally so the tools page can personalise the greeting
+    sessionStorage.setItem('tsf_lead', JSON.stringify(leadData));
+
+    if (API_ENDPOINT) {
+      submitBtn.textContent = 'Submitting\u2026';
+      submitBtn.disabled = true;
+
+      fetch(API_ENDPOINT, {
+        method  : 'POST',
+        headers : { 'Content-Type': 'application/json' },
+        body    : JSON.stringify(leadData)
+      })
+      .catch(function(err) {
+        console.warn('API submission failed:', err);
+      })
+      .finally(function() {
+        window.location.href = 'tools.html';
+      });
+    } else {
+      window.location.href = 'tools.html';
+    }
   });
-  ['firstName','lastName'].forEach(id => {
-    document.getElementById(id).addEventListener('input', function() { showError(id, id+'Error', false); });
+
+  ['firstName', 'lastName'].forEach(function(id) {
+    document.getElementById(id).addEventListener('input', function() {
+      showError(id, id + 'Error', false);
+    });
   });
   document.getElementById('email').addEventListener('input', function() {
-    if (this.value.trim()) showError('email','emailError', !validEmail(this.value.trim()));
+    if (this.value.trim()) showError('email', 'emailError', !validEmail(this.value.trim()));
   });
 </script>
 </body>

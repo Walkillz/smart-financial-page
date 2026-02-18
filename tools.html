@@ -408,7 +408,7 @@ function calcCashAdv(){
   D("ca-total").textContent=fmt2(total);D("ca-upfront").textContent=fmt2(upfront);
   D("ca-interest").textContent=fmt2(interest);D("ca-repay").textContent=fmt2(amt+total);
   var badge=effAPR>50?"badge-bad":effAPR>25?"badge-warn":"badge-good";
-  D("ca-effective").innerHTML="<span class=""+badge+"">"+fmtPct(effAPR)+"</span>";
+  D("ca-effective").innerHTML='<span class="'+badge+'">'+fmtPct(effAPR)+'</span>';
 }
 
 function calcPayAdv(){
@@ -417,11 +417,21 @@ function calcPayAdv(){
   var annAPR=(totalCost/amt)*(365/days)*100;var yearly=totalCost*(365/days);
   D("pa-total").textContent=fmt2(totalCost);D("pa-pct").textContent=fmtPct(pct);
   var badge=annAPR>100?"badge-bad":annAPR>36?"badge-warn":"badge-good";
-  D("pa-apr").innerHTML="<span class=""+badge+"">"+fmtPct(annAPR)+"</span>";
+  D("pa-apr").innerHTML='<span class="'+badge+'">'+fmtPct(annAPR)+'</span>';
   D("pa-yearly").textContent=fmt2(yearly);D("pa-warning").textContent=fmt2(yearly)+"/yr";
 }
 
-function addDebt(){var list=D("debt-list");var entry=document.createElement("div");entry.className="debt-entry";entry.innerHTML="<div class="fg"><label>Name</label><input type="text" value="New Debt"/></div><div class="fg"><label>Balance</label><input type="number" value="1000" min="0"/></div><div class="fg"><label>APR %</label><input type="number" value="15" min="0" step="0.01"/></div><div class="fg"><label>Min Pay</label><input type="number" value="50" min="0"/></div><div><button class="btn-sm btn-remove" onclick="removeDebt(this)">X</button></div>";list.appendChild(entry)}
+function addDebt(){
+  var list=D("debt-list");
+  var entry=document.createElement("div");
+  entry.className="debt-entry";
+  entry.innerHTML='<div class="fg"><label>Name</label><input type="text" value="New Debt"/></div>'
+    +'<div class="fg"><label>Balance</label><input type="number" value="1000" min="0"/></div>'
+    +'<div class="fg"><label>APR %</label><input type="number" value="15" min="0" step="0.01"/></div>'
+    +'<div class="fg"><label>Min Pay</label><input type="number" value="50" min="0"/></div>'
+    +'<div><button class="btn-sm btn-remove" onclick="removeDebt(this)">X</button></div>';
+  list.appendChild(entry);
+}
 function removeDebt(btn){btn.closest(".debt-entry").remove()}
 function getDebts(){var entries=document.querySelectorAll(".debt-entry");return Array.from(entries).map(function(e){var inp=e.querySelectorAll("input");return{balance:parseFloat(inp[1].value)||0,apr:parseFloat(inp[2].value)||0,minPay:parseFloat(inp[3].value)||0}})}
 function simulatePayoff(debts,extra,sortFn){
@@ -441,8 +451,8 @@ function calcDebtStrategy(){
   D("ds-av-months").textContent=av.months+" months";D("ds-av-interest").textContent=fmt(av.totalInterest);D("ds-av-total").textContent=fmt(av.totalPaid);
   D("ds-sb-months").textContent=sb.months+" months";D("ds-sb-interest").textContent=fmt(sb.totalInterest);D("ds-sb-total").textContent=fmt(sb.totalPaid);
   var diff=sb.totalInterest-av.totalInterest;var mDiff=sb.months-av.months;
-  if(diff>0){D("ds-diff").innerHTML="<div class="amount">Avalanche saves "+fmt(diff)+"</div><div class="label">and pays off "+Math.abs(mDiff)+" month"+(Math.abs(mDiff)!==1?"s":"")+" sooner</div>"}
-  else{D("ds-diff").innerHTML="<div class="amount">Both strategies cost about the same</div><div class="label">Snowball gives faster psychological wins</div>"}}
+  if(diff>0){D("ds-diff").innerHTML='<div class="amount">Avalanche saves '+fmt(diff)+'</div><div class="label">and pays off '+Math.abs(mDiff)+' month'+(Math.abs(mDiff)!==1?'s':'')+" sooner</div>"}
+  else{D("ds-diff").innerHTML='<div class="amount">Both strategies cost about the same</div><div class="label">Snowball gives faster psychological wins</div>'}}
 
 function calcRefi(){
   var bal=V("refi-balance");var oldR=V("refi-old-rate")/100/12,oldN=V("refi-old-term")*12;
@@ -459,9 +469,9 @@ function calcDTI(){
   var ratio=income>0?(debt/income)*100:0;
   D("dti-result").textContent=fmtPct(ratio);D("dti-total-debt").textContent=fmt(debt);D("dti-remaining").textContent=fmt(income-debt);
   var bar=D("dti-bar");bar.style.width=Math.min(ratio,100)+"%";
-  if(ratio<=36){D("dti-badge").innerHTML="<span class="badge-good">Excellent - you qualify for most loans</span>";bar.style.background="var(--green)"}
-  else if(ratio<=43){D("dti-badge").innerHTML="<span class="badge-warn">Moderate - some lenders may hesitate</span>";bar.style.background="var(--orange)"}
-  else{D("dti-badge").innerHTML="<span class="badge-bad">High - most lenders will decline</span>";bar.style.background="var(--red)"}}
+  if(ratio<=36){D("dti-badge").innerHTML='<span class="badge-good">Excellent - you qualify for most loans</span>';bar.style.background="var(--green)"}
+  else if(ratio<=43){D("dti-badge").innerHTML='<span class="badge-warn">Moderate - some lenders may hesitate</span>';bar.style.background="var(--orange)"}
+  else{D("dti-badge").innerHTML='<span class="badge-bad">High - most lenders will decline</span>';bar.style.background="var(--red)"}}
 
 function calcEmergency(){
   var expenses=V("ef-expenses"),months=V("ef-months"),current=V("ef-current"),contrib=V("ef-contrib");
@@ -492,7 +502,7 @@ function calcBiweekly(){
   var yearsNew=periods/26;var saved=totalMonthly-totalBW;
   D("bw-monthly").textContent=fmt2(monthlyPmt);D("bw-biweekly").textContent=fmt2(biweeklyPmt);
   D("bw-orig-payoff").textContent=years+" years";D("bw-new-payoff").textContent=yearsNew.toFixed(1)+" years";
-  D("bw-time-saved").innerHTML="<span class="badge-good">"+(years-yearsNew).toFixed(1)+" years early</span>";
+  D("bw-time-saved").innerHTML='<span class="badge-good">'+(years-yearsNew).toFixed(1)+' years early</span>';
   D("bw-saved").textContent=fmt(Math.max(saved,0))}
 
 function calcMinPay(){
@@ -503,7 +513,7 @@ function calcMinPay(){
   D("mp-months").textContent=months>=600?"600+":months;
   D("mp-years").textContent=months>=600?"50+ years!":(months/12).toFixed(1)+" years!";
   D("mp-interest").textContent=fmt(totalInt);D("mp-total-paid").textContent=fmt(totalPaid);
-  D("mp-multiplier").innerHTML="<span class="badge-bad">"+(totalPaid/bal).toFixed(1)+"x your balance</span>";
+  D("mp-multiplier").innerHTML='<span class="badge-bad">'+(totalPaid/bal).toFixed(1)+'x your balance</span>';
   var b2=bal,m2=0,int2=0,altPay=300;
   if(altPay>bal*mr){while(b2>0.01&&m2<600){var i2=b2*mr;int2+=i2;b2=b2+i2-Math.min(altPay,b2+i2);m2++}
   D("mp-alt-months").textContent=m2+" months | Save "+fmt(totalInt-int2)}
@@ -512,6 +522,6 @@ function calcMinPay(){
 calcLoan();calcCC();calcAPR();calcCashAdv();calcPayAdv();calcDebtStrategy();calcRefi();calcDTI();calcEmergency();calcLoanCompare();calcBiweekly();calcMinPay();
 
 var tocLinks=document.querySelectorAll(".toc a");var sections=document.querySelectorAll(".tool-section");
-var observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){tocLinks.forEach(function(a){a.classList.remove("active")});var link=document.querySelector(".toc a[href="#"+entry.target.id+""]");if(link)link.classList.add("active")}})},{rootMargin:"-160px 0px -60% 0px"});
+var observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){tocLinks.forEach(function(a){a.classList.remove("active")});var link=document.querySelector('.toc a[href="#'+entry.target.id+'"]');if(link)link.classList.add("active")}})},{rootMargin:"-160px 0px -60% 0px"});
 sections.forEach(function(s){observer.observe(s)});
 </script></body></html>
