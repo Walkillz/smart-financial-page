@@ -353,6 +353,19 @@
 </div>
 <footer><p>&copy; 2026 The Smart Financial. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p><p style="margin-top:.5rem">This site provides educational financial tools only. Not financial advice.</p></footer>
 
+<script type="text/javascript">
+  var _scq = _scq || [];
+  var _scs = _scs || {};
+  _scs.teamId = "dNBFPnTWFmQX5CRoDC3EVr";
+  (function() {
+    var dc = document.createElement('script');
+    dc.type = 'text/javascript';
+    dc.async = true;
+    dc.src = '//cdn.sendx.io/prod/dNBFPnTWFmQX5CRoDC3EVr.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(dc, s);
+  })();
+</script>
 <script>
 var D=document.getElementById.bind(document);
 var V=function(id){return parseFloat(D(id).value)||0};
@@ -509,6 +522,13 @@ function calcMinPay(){
   D("mp-alt-months").textContent=m2+" months | Save "+fmt(totalInt-int2)}
   else{D("mp-alt-months").textContent="Need higher payment"}}
 
+function trackCalc(name){try{_scq.push(["track",{addTags:["used-"+name]}])}catch(e){}}
+document.querySelectorAll(".btn-calc").forEach(function(btn){
+  btn.addEventListener("click",function(){
+    var section=btn.closest(".tool-section");
+    if(section)trackCalc(section.id);
+  });
+});
 calcLoan();calcCC();calcAPR();calcCashAdv();calcPayAdv();calcDebtStrategy();calcRefi();calcDTI();calcEmergency();calcLoanCompare();calcBiweekly();calcMinPay();
 
 var tocLinks=document.querySelectorAll(".toc a");var sections=document.querySelectorAll(".tool-section");
