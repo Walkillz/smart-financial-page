@@ -156,20 +156,54 @@ function calcMinPay(){
 function trackCalc(name){try{_scq.push(["track",{addTags:["used-"+name]}])}catch(e){}}
 
 var calcSectionMap={"loan-calc":"loan_payment","cc-payoff":"credit_card_payoff","apr-reveal":"apr_revealer","cash-advance":"cash_advance","pay-advance":"pay_advance","debt-strategy":"debt_strategy","refinance":"refinance","dti":"dti","emergency":"emergency_fund","loan-compare":"loan_compare","biweekly":"biweekly","cc-minimum":"min_payment_trap"};
-var userCalcRun={};
+
+var calcResultFields={
+  "loan_payment":[["calc_monthly_payment","lp-monthly"],["calc_total_of_payments","lp-total"],["calc_total_interest","lp-interest"],["calc_interest_to_loan_ratio","lp-ratio"]],
+  "credit_card_payoff":[["calc_months_to_payoff","cc-months"],["calc_payoff_date","cc-date"],["calc_total_interest_paid","cc-total-interest"],["calc_total_amount_paid","cc-total-paid"],["calc_saved_vs_minimum","cc-savings-amount"]],
+  "apr_revealer":[["calc_offer_a_total","apr-a-total"],["calc_offer_b_total","apr-b-total"],["calc_offer_a_monthly","apr-a-monthly"],["calc_offer_b_monthly","apr-b-monthly"],["calc_apr_total_difference","apr-winner"]],
+  "cash_advance":[["calc_cash_advance_total_cost","ca-total"],["calc_cash_advance_upfront_fee","ca-upfront"],["calc_cash_advance_interest","ca-interest"],["calc_cash_advance_total_repay","ca-repay"],["calc_cash_advance_effective_apr","ca-effective"]],
+  "pay_advance":[["calc_pay_advance_total_cost","pa-total"],["calc_pay_advance_cost_pct","pa-pct"],["calc_pay_advance_annualized_apr","pa-apr"],["calc_pay_advance_yearly_cost","pa-yearly"]],
+  "debt_strategy":[["calc_avalanche_payoff_time","ds-av-months"],["calc_avalanche_total_interest","ds-av-interest"],["calc_avalanche_total_paid","ds-av-total"],["calc_snowball_payoff_time","ds-sb-months"],["calc_snowball_total_interest","ds-sb-interest"],["calc_snowball_total_paid","ds-sb-total"]],
+  "refinance":[["calc_refi_monthly_savings","refi-monthly-save"],["calc_refi_current_payment","refi-old-pmt"],["calc_refi_new_payment","refi-new-pmt"],["calc_refi_break_even","refi-breakeven"],["calc_refi_net_savings","refi-net-save"]],
+  "dti":[["calc_dti_ratio","dti-result"],["calc_dti_total_monthly_debt","dti-total-debt"],["calc_dti_remaining_after_debt","dti-remaining"]],
+  "emergency_fund":[["calc_emergency_goal","ef-goal"],["calc_emergency_still_needed","ef-needed"],["calc_emergency_months_to_goal","ef-time"],["calc_emergency_target_date","ef-date"]],
+  "loan_compare":[["calc_loan_a_monthly","lc-a-pmt"],["calc_loan_b_monthly","lc-b-pmt"],["calc_loan_a_total","lc-a-total"],["calc_loan_b_total","lc-b-total"],["calc_loan_a_interest","lc-a-int"],["calc_loan_b_interest","lc-b-int"],["calc_loan_total_difference","lc-winner"]],
+  "biweekly":[["calc_biweekly_interest_saved","bw-saved"],["calc_biweekly_monthly_payment","bw-monthly"],["calc_biweekly_payment","bw-biweekly"],["calc_biweekly_original_payoff","bw-orig-payoff"],["calc_biweekly_new_payoff","bw-new-payoff"],["calc_biweekly_time_saved","bw-time-saved"]],
+  "min_payment_trap":[["calc_min_trap_payoff_time","mp-months"],["calc_min_trap_total_interest","mp-interest"],["calc_min_trap_total_paid","mp-total-paid"],["calc_min_trap_interest_multiplier","mp-multiplier"]]
+};
+
+function stripVal(s){return s.replace(/[\$%,]/g,"").trim()}
+
+function captureCalcResults(calcName){
+  var fields=calcResultFields[calcName];
+  if(!fields)return{};
+  var result={};
+  for(var i=0;i<fields.length;i++){
+    var el=document.getElementById(fields[i][1]);
+    if(el){var t=el.textContent.trim();if(t&&t!=="--")result[fields[i][0]]=stripVal(t)}
+  }
+  return result;
+}
+
+function sectionHasResults(section){
+  var els=section.querySelectorAll(".result-big, .rv");
+  return Array.from(els).some(function(el){var t=el.textContent.trim();return t&&t!=="--"});
+}
 
 document.querySelectorAll(".btn-calc").forEach(function(btn){
+  if(btn.closest(".email-inline-form"))return;
   btn.addEventListener("click",function(){
     var section=btn.closest(".tool-section");
-    if(section){
-      trackCalc(section.id);
-      var calcName=calcSectionMap[section.id];
-      if(calcName&&!userCalcRun[calcName]){
-        userCalcRun[calcName]=true;
+    if(!section)return;
+    trackCalc(section.id);
+    var calcName=calcSectionMap[section.id];
+    if(!calcName)return;
+    setTimeout(function(){
+      if(sectionHasResults(section)){
         var reportBtn=section.querySelector('.btn-email-report[data-calc="'+calcName+'"]');
         if(reportBtn)reportBtn.style.display="block";
       }
-    }
+    },0);
   });
 });
 calcLoan();calcCC();calcAPR();calcCashAdv();calcPayAdv();calcDebtStrategy();calcRefi();calcDTI();calcEmergency();calcLoanCompare();calcBiweekly();calcMinPay();
@@ -181,43 +215,25 @@ function validEmailAddr(e){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)}
 
 function sendEmailReport(email,calcName,btn){
   btn.disabled=true;btn.textContent="Sending...";
+  var customFields={calculator_used:calcName};
+  var results=captureCalcResults(calcName);
+  for(var k in results){if(results.hasOwnProperty(k))customFields[k]=results[k]}
+  function onSuccess(){btn.textContent="\u2705 Report sent!";btn.className="btn-email-report success"}
+  function onFailure(){
+    btn.textContent="Something went wrong \u2014 try again";btn.className="btn-email-report error";
+    setTimeout(function(){btn.disabled=false;btn.textContent="\uD83D\uDCE7 Email my report";btn.className="btn-email-report"},3000);
+  }
   function doIdentify(){
     if(typeof _scq==="object"&&typeof _scq.push==="function"&&_scq.push!==Array.prototype.push){
-      _scq.push(["identify",{
-        email:email,
-        tags:["calculator:"+calcName],
-        customFields:{calculator_used:calcName},
-        success:function(){
-          btn.textContent="\u2705 Report sent!";btn.className="btn-email-report success";
-        },
-        failure:function(){
-          btn.textContent="Something went wrong \u2014 try again";btn.className="btn-email-report error";
-          setTimeout(function(){btn.disabled=false;btn.textContent="\uD83D\uDCE7 Email my report";btn.className="btn-email-report"},3000);
-        }
-      }]);
+      _scq.push(["identify",{email:email,tags:["calculator:"+calcName],customFields:customFields,success:onSuccess,failure:onFailure}]);
     } else {
       var attempts=0;
       var check=setInterval(function(){
         attempts++;
         if(typeof _scq==="object"&&typeof _scq.push==="function"&&_scq.push!==Array.prototype.push){
           clearInterval(check);
-          _scq.push(["identify",{
-            email:email,
-            tags:["calculator:"+calcName],
-            customFields:{calculator_used:calcName},
-            success:function(){
-              btn.textContent="\u2705 Report sent!";btn.className="btn-email-report success";
-            },
-            failure:function(){
-              btn.textContent="Something went wrong \u2014 try again";btn.className="btn-email-report error";
-              setTimeout(function(){btn.disabled=false;btn.textContent="\uD83D\uDCE7 Email my report";btn.className="btn-email-report"},3000);
-            }
-          }]);
-        } else if(attempts>=20){
-          clearInterval(check);
-          btn.textContent="Something went wrong \u2014 try again";btn.className="btn-email-report error";
-          setTimeout(function(){btn.disabled=false;btn.textContent="\uD83D\uDCE7 Email my report";btn.className="btn-email-report"},3000);
-        }
+          _scq.push(["identify",{email:email,tags:["calculator:"+calcName],customFields:customFields,success:onSuccess,failure:onFailure}]);
+        } else if(attempts>=20){clearInterval(check);onFailure()}
       },250);
     }
   }
