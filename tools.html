@@ -87,6 +87,14 @@
     footer{background:var(--dark);color:rgba(255,255,255,.5);text-align:center;padding:2rem;font-size:.8rem;margin-top:2rem}
     footer a{color:rgba(255,255,255,.6);text-decoration:none}
     @media(max-width:800px){.tool-grid{grid-template-columns:1fr}.input-row{grid-template-columns:1fr}.debt-entry{grid-template-columns:1fr 1fr;gap:.4rem}}
+    .btn-email-report{display:none;padding:.6rem 1.2rem;background:var(--dark);color:var(--white);font-size:.82rem;font-weight:700;border:none;border-radius:var(--radius);cursor:pointer;transition:background .2s,transform .15s,opacity .2s;margin-top:.75rem;width:100%;text-align:center}
+    .btn-email-report:hover:not(:disabled){background:var(--primary-dark);transform:translateY(-1px)}
+    .btn-email-report:disabled{opacity:.7;cursor:not-allowed}
+    .btn-email-report.success{background:var(--green)}
+    .btn-email-report.error{background:var(--red)}
+    .email-inline-form{display:none;margin-top:.75rem}
+    .email-inline-form .fg{margin-bottom:.5rem}
+    .email-inline-form .btn-calc{width:100%;font-size:.82rem}
   </style>
 </head>
 <body>
@@ -112,6 +120,8 @@
       <div class="result-row"><span class="rk">Interest-to-Loan Ratio</span><span class="rv" id="lp-ratio">--</span></div>
       <div class="table-scroll" id="lp-amort-wrap" style="display:none"><table class="amort-table"><thead><tr><th>Year</th><th>Principal</th><th>Interest</th><th>Balance</th></tr></thead><tbody id="lp-amort-body"></tbody></table></div>
       <button class="btn-calc" style="margin-top:.5rem;background:var(--dark);font-size:.78rem;padding:.5rem 1rem" onclick="toggleAmort()">Show Amortization Schedule</button>
+      <button class="btn-email-report" data-calc="loan_payment">📧 Email my report</button>
+      <div class="email-inline-form" data-calc="loan_payment"><div class="fg"><label>Your Email</label><input type="email" placeholder="you@email.com"/></div><button class="btn-calc" onclick="submitEmailReport(this)">Send Report</button></div>
     </div>
   </div></div>
 </section>
@@ -132,6 +142,8 @@
       <div class="result-row"><span class="rk">Total Interest Paid</span><span class="rv" id="cc-total-interest">--</span></div>
       <div class="result-row"><span class="rk">Total Amount Paid</span><span class="rv" id="cc-total-paid">--</span></div>
       <div class="savings-callout" id="cc-savings" style="display:none"><div class="amount" id="cc-savings-amount">$0</div><div class="label">saved vs minimum payments</div></div>
+      <button class="btn-email-report" data-calc="credit_card_payoff">📧 Email my report</button>
+      <div class="email-inline-form" data-calc="credit_card_payoff"><div class="fg"><label>Your Email</label><input type="email" placeholder="you@email.com"/></div><button class="btn-calc" onclick="submitEmailReport(this)">Send Report</button></div>
     </div>
   </div></div>
 </section>
@@ -155,6 +167,8 @@
       <div class="result-row"><span class="rk">Offer A Monthly</span><span class="rv" id="apr-a-monthly">--</span></div>
       <div class="result-row"><span class="rk">Offer B Monthly</span><span class="rv" id="apr-b-monthly">--</span></div>
       <div class="savings-callout"><div class="amount" id="apr-winner">--</div><div class="label">in total cost over the life of the loan</div></div>
+      <button class="btn-email-report" data-calc="apr_revealer">📧 Email my report</button>
+      <div class="email-inline-form" data-calc="apr_revealer"><div class="fg"><label>Your Email</label><input type="email" placeholder="you@email.com"/></div><button class="btn-calc" onclick="submitEmailReport(this)">Send Report</button></div>
     </div>
   </div></div>
 </section>
@@ -176,6 +190,8 @@
       <div class="result-row"><span class="rk">Interest</span><span class="rv" id="ca-interest">--</span></div>
       <div class="result-row"><span class="rk">Total You Repay</span><span class="rv" id="ca-repay">--</span></div>
       <div class="result-row"><span class="rk">Effective APR</span><span class="rv" id="ca-effective">--</span></div>
+      <button class="btn-email-report" data-calc="cash_advance">📧 Email my report</button>
+      <div class="email-inline-form" data-calc="cash_advance"><div class="fg"><label>Your Email</label><input type="email" placeholder="you@email.com"/></div><button class="btn-calc" onclick="submitEmailReport(this)">Send Report</button></div>
     </div>
   </div></div>
 </section>
@@ -197,6 +213,8 @@
       <div class="result-row"><span class="rk">Annualized APR Equivalent</span><span class="rv" id="pa-apr">--</span></div>
       <div class="result-row"><span class="rk">Yearly Cost (if used every payday)</span><span class="rv" id="pa-yearly">--</span></div>
       <div class="savings-callout" style="background:var(--red-light);border-color:rgba(239,68,68,.2)"><div class="amount" style="color:var(--red)" id="pa-warning">--</div><div class="label">could go to savings or paying down debt instead</div></div>
+      <button class="btn-email-report" data-calc="pay_advance">📧 Email my report</button>
+      <div class="email-inline-form" data-calc="pay_advance"><div class="fg"><label>Your Email</label><input type="email" placeholder="you@email.com"/></div><button class="btn-calc" onclick="submitEmailReport(this)">Send Report</button></div>
     </div>
   </div></div>
 </section>
@@ -223,6 +241,8 @@
       <div class="result-side"><span class="result-label">Snowball (Smallest Balance First)</span><div class="result-big" id="ds-sb-months">--</div><div class="result-row"><span class="rk">Total Interest</span><span class="rv" id="ds-sb-interest">--</span></div><div class="result-row"><span class="rk">Total Paid</span><span class="rv" id="ds-sb-total">--</span></div></div>
     </div>
     <div class="savings-callout" id="ds-diff" style="margin-top:1rem"><div class="amount">--</div><div class="label">--</div></div>
+    <button class="btn-email-report" data-calc="debt_strategy">📧 Email my report</button>
+    <div class="email-inline-form" data-calc="debt_strategy"><div class="fg"><label>Your Email</label><input type="email" placeholder="you@email.com"/></div><button class="btn-calc" onclick="submitEmailReport(this)">Send Report</button></div>
   </div>
 </section>
 
@@ -244,6 +264,8 @@
       <div class="result-row"><span class="rk">New Payment</span><span class="rv" id="refi-new-pmt">--</span></div>
       <div class="result-row"><span class="rk">Break-Even Point</span><span class="rv" id="refi-breakeven">--</span></div>
       <div class="result-row"><span class="rk">Net Savings (after costs)</span><span class="rv" id="refi-net-save">--</span></div>
+      <button class="btn-email-report" data-calc="refinance">📧 Email my report</button>
+      <div class="email-inline-form" data-calc="refinance"><div class="fg"><label>Your Email</label><input type="email" placeholder="you@email.com"/></div><button class="btn-calc" onclick="submitEmailReport(this)">Send Report</button></div>
     </div>
   </div></div>
 </section>
@@ -268,6 +290,8 @@
       <div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--text-muted);margin-top:.25rem"><span>0%</span><span>36% Good</span><span>43% Max</span><span>50%+</span></div>
       <div class="result-row" style="margin-top:.75rem"><span class="rk">Total Monthly Debt</span><span class="rv" id="dti-total-debt">--</span></div>
       <div class="result-row"><span class="rk">Remaining After Debt</span><span class="rv" id="dti-remaining">--</span></div>
+      <button class="btn-email-report" data-calc="dti">📧 Email my report</button>
+      <div class="email-inline-form" data-calc="dti"><div class="fg"><label>Your Email</label><input type="email" placeholder="you@email.com"/></div><button class="btn-calc" onclick="submitEmailReport(this)">Send Report</button></div>
     </div>
   </div></div>
 </section>
@@ -291,6 +315,8 @@
       <div><span class="result-label" style="margin-top:.5rem;display:block">Progress</span></div>
       <div class="progress-bar"><div class="progress-fill" id="ef-bar" style="width:0%;background:var(--primary)"></div></div>
       <div style="text-align:center;font-size:.8rem;font-weight:600;color:var(--primary);margin-top:.3rem" id="ef-pct">--</div>
+      <button class="btn-email-report" data-calc="emergency_fund">📧 Email my report</button>
+      <div class="email-inline-form" data-calc="emergency_fund"><div class="fg"><label>Your Email</label><input type="email" placeholder="you@email.com"/></div><button class="btn-calc" onclick="submitEmailReport(this)">Send Report</button></div>
     </div>
   </div></div>
 </section>
@@ -316,6 +342,8 @@
       <div class="result-row"><span class="rk">Loan A Interest</span><span class="rv" id="lc-a-int">--</span></div>
       <div class="result-row"><span class="rk">Loan B Interest</span><span class="rv" id="lc-b-int">--</span></div>
       <div class="savings-callout"><div class="amount" id="lc-winner">--</div><div class="label">in total cost</div></div>
+      <button class="btn-email-report" data-calc="loan_compare">📧 Email my report</button>
+      <div class="email-inline-form" data-calc="loan_compare"><div class="fg"><label>Your Email</label><input type="email" placeholder="you@email.com"/></div><button class="btn-calc" onclick="submitEmailReport(this)">Send Report</button></div>
     </div>
   </div></div>
 </section>
@@ -337,6 +365,8 @@
       <div class="result-row"><span class="rk">Original Payoff</span><span class="rv" id="bw-orig-payoff">--</span></div>
       <div class="result-row"><span class="rk">New Payoff</span><span class="rv" id="bw-new-payoff">--</span></div>
       <div class="result-row"><span class="rk">Time Saved</span><span class="rv" id="bw-time-saved">--</span></div>
+      <button class="btn-email-report" data-calc="biweekly">📧 Email my report</button>
+      <div class="email-inline-form" data-calc="biweekly"><div class="fg"><label>Your Email</label><input type="email" placeholder="you@email.com"/></div><button class="btn-calc" onclick="submitEmailReport(this)">Send Report</button></div>
     </div>
   </div></div>
 </section>
@@ -359,6 +389,8 @@
       <div class="result-row"><span class="rk">Total Amount Paid</span><span class="rv" id="mp-total-paid">--</span></div>
       <div class="result-row"><span class="rk">Interest Multiplier</span><span class="rv" id="mp-multiplier">--</span></div>
       <div class="savings-callout" style="background:var(--green-light);border-color:rgba(16,185,129,.2);margin-top:.75rem"><div class="label">If you paid <strong>$300/mo</strong> instead:</div><div class="amount" style="color:var(--green)" id="mp-alt-months">--</div></div>
+      <button class="btn-email-report" data-calc="min_payment_trap">📧 Email my report</button>
+      <div class="email-inline-form" data-calc="min_payment_trap"><div class="fg"><label>Your Email</label><input type="email" placeholder="you@email.com"/></div><button class="btn-calc" onclick="submitEmailReport(this)">Send Report</button></div>
     </div>
   </div></div>
 </section>
